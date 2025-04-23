@@ -4,45 +4,6 @@ using UnityEngine;
 
 namespace PhysicSystem
 {
-    // Oyun durumunu saklamak için kullanılacak veri yapısı
-    public struct GameState
-    {
-        public int Frame;
-        public BallData BallData;
-
-        // Deep copy oluşturmak için constructor
-        public GameState(int frame, BallData ballData)
-        {
-            Frame = frame;
-            BallData = new BallData
-            {
-                PositionX = ballData.PositionX,
-                PositionY = ballData.PositionY,
-                VelocityX = ballData.VelocityX,
-                VelocityY = ballData.VelocityY,
-                Radius = ballData.Radius,
-                JumpForce = ballData.JumpForce,
-                MoveSpeed = ballData.MoveSpeed
-            };
-        }
-    }
-
-    // Oyuncu girdilerini saklamak için kullanılacak veri yapısı
-    public struct PlayerInput
-    {
-        public int Frame;
-        public sfloat HorizontalInput;
-        public bool JumpInput;
-
-        public PlayerInput(int frame, sfloat horizontalInput, bool jumpInput)
-        {
-            Frame = frame;
-            HorizontalInput = horizontalInput;
-            JumpInput = jumpInput;
-        }
-    }
-
-    // Rollback yönetici sınıfı
     public class RollbackManager
     {
         private Dictionary<int, GameState> gameStates = new Dictionary<int, GameState>();
@@ -50,7 +11,7 @@ namespace PhysicSystem
         
         private int currentFrame = 0;
         private int lastSavedFrame = -1;
-        private int maxHistoryFrames = 120; // 2 saniye @ 60 FPS
+        private int maxHistoryFrames = 300; // 5 saniye @ 60 FPS
         
         private sfloat gravity;
         private sfloat leftBoundary;
@@ -58,6 +19,9 @@ namespace PhysicSystem
         private sfloat bottomBoundary;
         private sfloat topBoundary;
         private sfloat deltaTime;
+
+        // Pozisyon tarihçesi (görsel rollback için)
+        public List<Vector2> PositionHistory { get; private set; } = new List<Vector2>();
 
         public RollbackManager(sfloat gravity, sfloat leftBoundary, sfloat rightBoundary, sfloat bottomBoundary, sfloat topBoundary, sfloat fixedDeltaTime)
         {
@@ -75,6 +39,13 @@ namespace PhysicSystem
             GameState state = new GameState(currentFrame, ballData);
             gameStates[currentFrame] = state;
             lastSavedFrame = currentFrame;
+
+            // Pozisyon tarihçesini kaydet
+            PositionHistory.Add(new Vector2((float)ballData.PositionX, (float)ballData.PositionY));
+            if (PositionHistory.Count > maxHistoryFrames)
+            {
+                PositionHistory.RemoveAt(0);
+            }
 
             // Eski durumları temizle (bellek optimizasyonu için)
             if (currentFrame > maxHistoryFrames)
@@ -108,19 +79,19 @@ namespace PhysicSystem
 
             // Hedef frame'deki durumu al
             GameState targetState = gameStates[targetFrame];
-            BallData ballData = targetState.BallData;
             
             // Şu anki frame'i güncelle
             currentFrame = targetFrame;
             
-            return ballData;
+            // Derin kopya yaparak döndür
+            return targetState.BallData.Clone();
         }
 
         // Belirli bir frame'den başlayarak simülasyonu yeniden çalıştır
         public BallData ResimulateToFrame(int targetFrame, BallData initialBallData)
         {
             int startFrame = currentFrame;
-            BallData currentBallData = initialBallData;
+            BallData currentBallData = initialBallData.Clone();
             
             for (int frame = startFrame; frame <= targetFrame; frame++)
             {
@@ -162,6 +133,43 @@ namespace PhysicSystem
                 return ResimulateToFrame(targetFrame, rollbackData);
             }
             return null;
+        }
+
+        // Mock input eklemek için metot
+        public void AddMockInput(int frame, sfloat horizontalInput, bool jumpInput)
+        {
+            PlayerInput input = new PlayerInput(frame, horizontalInput, jumpInput);
+            playerInputs[frame] = input;
+        }
+
+        // Belirli bir frame aralığı için mock inputlar ekle
+        public void AddMockInputRange(int startFrame, int endFrame, sfloat horizontalInput, bool jumpInput)
+        {
+            for (int frame = startFrame; frame <= endFrame; frame++)
+            {
+                AddMockInput(frame, horizontalInput, jumpInput);
+            }
+        }
+
+        // Pozisyon tarihçesini temizle
+        public void ClearPositionHistory()
+        {
+            PositionHistory.Clear();
+        }
+
+        public bool GetPlayerInput(int i, out PlayerInput playerInput)
+        {
+            if (playerInputs.TryGetValue(i, out playerInput))
+            {
+                return true;
+            }
+            else
+            {
+                playerInput = new PlayerInput();
+                return false;
+            }
+            
+            
         }
     }
 }

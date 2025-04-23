@@ -1,4 +1,5 @@
 using SoftFloat;
+using UnityEngine;
 
 namespace PhysicSystem
 {
@@ -12,8 +13,6 @@ namespace PhysicSystem
 
         public sfloat JumpForce;
         public sfloat MoveSpeed;
-
-
 
         public void UpdatePosition(sfloat deltaTime, sfloat gravity, sfloat leftBoundary, sfloat rightBoundary,
             sfloat bottomBoundary, sfloat topBoundary)
@@ -66,6 +65,21 @@ namespace PhysicSystem
         public bool IsOnGround(sfloat bottomBoundary)
         {
             return (PositionY - Radius) <= bottomBoundary;
+        }
+
+        // Derin kopya oluşturmak için
+        public BallData Clone()
+        {
+            return new BallData
+            {
+                PositionX = this.PositionX,
+                PositionY = this.PositionY,
+                VelocityX = this.VelocityX,
+                VelocityY = this.VelocityY,
+                Radius = this.Radius,
+                JumpForce = this.JumpForce,
+                MoveSpeed = this.MoveSpeed
+            };
         }
     }
 }
