@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using TMPro;
 
 public class RollbackTester : MonoBehaviour
 {
     [SerializeField] private BallVisualSoftFloat ball;
     [SerializeField] private Button rollbackButton;
     [SerializeField] private Slider rollbackFramesSlider;
-    [SerializeField] private Text rollbackFramesText;
+    [SerializeField] private TextMeshProUGUI rollbackFramesText;
     
     private int framesToRollback = 60;
     
