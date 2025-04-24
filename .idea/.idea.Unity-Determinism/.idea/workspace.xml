@@ -5,21 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e93897cf-d56b-4e99-b45b-ff53a5299020" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Unity-Determinism/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Unity-Determinism/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/InputSystem.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Input.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/InputSystem/PlayerInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Input/PlayerInput.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/InputSystem/PlayerInput.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Input/PlayerInput.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PhysicSystem.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Physic.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PhysicSystem/BallData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Physic/BallData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PhysicSystem/BallData.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Physic/BallData.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PhysicSystem/BallVisual.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Physic/BallVisual.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PhysicSystem/BallVisual.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Physic/BallVisual.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/RollbackSystem.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Rollback.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/RollbackSystem/GameState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Rollback/GameState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/RollbackSystem/GameState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Rollback/GameState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/RollbackSystem/RollbackManager.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/RollbackSystem/RollbackTester.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Rollback/RollbackTester.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/RollbackSystem/RollbackTester.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Rollback/RollbackTester.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Physic/BallVisual.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Physic/BallVisual.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Rollback/GameState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Rollback/GameState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/RollbackSystem/RollbackManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/RollbackSystem/RollbackManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
