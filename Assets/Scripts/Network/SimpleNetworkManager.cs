@@ -1,84 +1,145 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using UnityEngine;
 
 public class SimpleNetworkManager : MonoBehaviour
 {
-    public enum Mode { None, Server, Client }
+    public enum Mode
+    {
+        None,
+        Server,
+        Client
+    }
+
     public Mode mode = Mode.None;
 
-    UdpClient udp;
-    IPEndPoint remoteEP;
+    private UdpClient udp;
+    private IPEndPoint remoteEP;
+    private Thread receiveThread;
 
-    Thread receiveThread;
-    bool isRunning = false;
+    public int port = 7777;
+    public string serverIP = "127.0.0.1";
 
-    public event Action<ulong, ulong> OnDataReceived;
+    public GameObject connectionPanel;
+    public GameObject ballObject;
 
-    public string ipAddress = "127.0.0.1"; // Server IP (client kullanır)
-    public int port = 9050;                // Same port for both ends
+    public Action<ulong, ulong> OnDataReceived;
 
-    void OnDestroy()
-    {
-        isRunning = false;
-        udp?.Close();
-        receiveThread?.Abort();
-    }
+    private bool gameStarted = false;
 
     public void StartAsServer()
     {
         mode = Mode.Server;
         udp = new UdpClient(port);
-        remoteEP = new IPEndPoint(IPAddress.Any, port);
-        Debug.Log("Server started. Waiting for client...");
+        Debug.Log(3"Server started on port " + port);
         StartReceiving();
+
+        // Bu satırı ekle:
+        UnityMainThreadDispatcher.Instance().Enqueue(StartGame);
     }
+
 
     public void StartAsClient()
     {
         mode = Mode.Client;
         udp = new UdpClient();
-        remoteEP = new IPEndPoint(IPAddress.Parse(ipAddress), port);
+        remoteEP = new IPEndPoint(IPAddress.Parse(serverIP), port);
+        Debug.Log("Client started, sending to " + serverIP + ":" + port);
         StartReceiving();
-        Debug.Log("Client started. Trying to connect...");
-    }
 
-    void StartReceiving()
-    {
-        isRunning = true;
-        receiveThread = new Thread(() =>
-        {
-            while (isRunning)
-            {
-                try
-                {
-                    var receivedData = udp.Receive(ref remoteEP);
-                    ulong input = BitConverter.ToUInt64(receivedData, 0);
-                    ulong frame = BitConverter.ToUInt64(receivedData, 8);
-                    OnDataReceived?.Invoke(input, frame);
-                }
-                catch (Exception ex)
-                {
-                    Debug.Log("Receive error: " + ex.Message);
-                }
-            }
-        });
-        receiveThread.IsBackground = true;
-        receiveThread.Start();
+        // Server'a kendini tanıtmak için boş veri gönder
+        SendData(0, 0);
     }
 
     public void SendData(ulong input, ulong frame)
     {
-        byte[] buffer = new byte[16];
-        Array.Copy(BitConverter.GetBytes(input), 0, buffer, 0, 8);
-        Array.Copy(BitConverter.GetBytes(frame), 0, buffer, 8, 8);
+        if (mode == Mode.None)
+        {
+            Debug.LogWarning("Network mode not set.");
+            return;
+        }
 
-        if (mode == Mode.Server && remoteEP != null)
-            udp.Send(buffer, buffer.Length, remoteEP);
-        else if (mode == Mode.Client)
-            udp.Send(buffer, buffer.Length, remoteEP);
+        if (mode == Mode.Server && remoteEP == null)
+        {
+            Debug.LogWarning("Client bağlantısı bekleniyor...");
+            return;
+        }
+
+        byte[] data = new byte[16];
+        BitConverter.GetBytes(input).CopyTo(data, 0);
+        BitConverter.GetBytes(frame).CopyTo(data, 8);
+
+        try
+        {
+            udp.Send(data, data.Length, remoteEP);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("SendData hatası: " + e.Message);
+        }
+    }
+
+    private void StartReceiving()
+    {
+        receiveThread = new Thread(() =>
+        {
+            while (true)
+            {
+                try
+                {
+                    var senderEP = new IPEndPoint(IPAddress.Any, 0);
+                    var data = udp.Receive(ref senderEP);
+
+                    // Server ilk client'i tanır
+                    if (mode == Mode.Server && remoteEP == null)
+                    {
+                        remoteEP = senderEP;
+                        Debug.Log("Client connected: " + remoteEP);
+                        UnityMainThreadDispatcher.Instance().Enqueue(StartGame);
+                    }
+
+                    if (data.Length == 16)
+                    {
+                        ulong input = BitConverter.ToUInt64(data, 0);
+                        ulong frame = BitConverter.ToUInt64(data, 8);
+
+                        OnDataReceived?.Invoke(input, frame);
+
+                        // Client ilk veri aldığında başlatır
+                        if (mode == Mode.Client && !gameStarted)
+                        {
+                            gameStarted = true;
+                            UnityMainThreadDispatcher.Instance().Enqueue(StartGame);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Receive hatası: " + e.Message);
+                }
+            }
+        });
+
+        receiveThread.IsBackground = true;
+        receiveThread.Start();
+    }
+
+    private void StartGame()
+    {
+        Debug.Log("Oyun başlatılıyor.");
+
+        if (connectionPanel != null)
+            connectionPanel.SetActive(false);
+
+        if (ballObject != null)
+            ballObject.SetActive(true);
+    }
+
+    private void OnApplicationQuit()
+    {
+        receiveThread?.Abort();
+        udp?.Close();
     }
 }
