@@ -33,7 +33,7 @@ public class SimpleNetworkManager : MonoBehaviour
     {
         mode = Mode.Server;
         udp = new UdpClient(port);
-        Debug.Log(3"Server started on port " + port);
+        Debug.Log("Server started on port " + port);
         StartReceiving();
 
         // Bu satırı ekle:

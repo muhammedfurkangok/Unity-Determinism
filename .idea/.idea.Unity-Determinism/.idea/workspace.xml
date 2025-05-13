@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e93897cf-d56b-4e99-b45b-ff53a5299020" name="Changes" comment="" />
+    <list default="true" id="e93897cf-d56b-4e99-b45b-ff53a5299020" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Unity-Determinism/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Unity-Determinism/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Network/SimpleNetworkManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Network/SimpleNetworkManager.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -109,6 +112,7 @@
       <workItem from="1745498892324" duration="3094000" />
       <workItem from="1746300404304" duration="1179000" />
       <workItem from="1746301647274" duration="998000" />
+      <workItem from="1747162538089" duration="1512000" />
     </task>
     <servers />
   </component>
