@@ -23,6 +23,8 @@ public class NetworkTestGame : MonoBehaviour
 
         // Her frame veri gönder
         networkManager.SendData(inputValue, currentFrame);
+        
+        
     }
 
     void OnNetworkData(ulong receivedInput, ulong receivedFrame)
